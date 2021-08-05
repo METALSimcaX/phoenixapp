@@ -1,0 +1,42 @@
+{
+	"/getstock/*": {
+		"target": "http://201.149.34.175:8001",
+		"secure": false,
+		"logLevel": "debug",
+		"changeOrigin": true,
+		"bypass": false
+	},
+	"/ApiMacropay/*": {
+		"target": "https://servicios.grupomacro.mx:4444",
+		"secure": true,
+		"logLevel": "debug",
+		"changeOrigin": true,
+		"bypass": false
+	},
+	"/api/*": {
+		"target": "http://10.1.2.15:8001",
+		"secure": false,
+		"logLevel": "debug",
+		"changeOrigin": true,
+		"bypass": false
+	},
+	"/record-customer-payment/*": {
+		"target": "https://www.testappcredito.macropay.com.mx",
+		"secure": true,
+		"logLevel": "debug",
+		"changeOrigin": true,
+		"bypass": false
+	},
+	"/partner/*": {
+		"target": "https://sandbox.payjoy.com/api",
+		"secure": false,
+		"logLevel": "debug",
+		"changeOrigin": true
+	},
+	"/WSBuilderPlus/*": {
+		"target": "https://emisioncelyactest.ekomercio.com",
+		"secure": false,
+		"logLevel": "debug",
+		"bypass": true
+	}
+}

@@ -1,0 +1,52 @@
+<div class=" row">
+    <div class=" col-xl-12">
+        <div class=" card" *ngIf="!hasDrawerOpen">
+            <div class=" card-header bg-transparent">
+                <div class=" row align-items-center">
+                    <div class=" col">
+    
+                        <h5 class=" h3 mb-0">Caja actual</h5>
+                    </div>
+                </div>
+            </div>
+    
+            <div class=" card-body">
+                <form [formGroup]="this.formDrawer">
+                    <div class="form-group">
+                        <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                          </div>
+                          <input type="number" onkeypress="return event.charCode >= 48 || event.charCode == 46 || event.charCode == 44" min="0.00" class="form-control" aria-label="cantidad" name="monto_apertura" formControlName="monto_apertura" [ngModel]="cash">
+                        </div>
+                        <br>
+                        <button type="button" (click)="openDrawer(classic)" class="btn btn-primary btn-lg btn-block">Confirmar Apertura</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class=" card" *ngIf="hasDrawerOpen">
+            <div class="alert alert-warning" role="alert">
+                <strong>Atención</strong> La caja se encuentra abierta, por favor cierra la caja actual para crear una nueva.
+            </div>
+        </div>
+    </div>
+    <ng-template #classic let-c="close" let-d="dismiss">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="modal-title-default">Caja Abierta para el dia de hoy {{today | date:'h:mm a'}}</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Ya puedes iniciar con tus operaciones del día.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">OK</button>
+          </div>
+        </div>
+      </ng-template>
+</div>      
+

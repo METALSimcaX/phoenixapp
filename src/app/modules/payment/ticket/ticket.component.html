@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div *ngIf="this.ticketInfo" id="ticketcomp" class="ticket">
+            <style type="text/css">
+            
+                @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+    
+                * { 
+                    font-size: 12px; 
+                    font-family: Helvetica;
+                }
+                p, h1, h2, h3, h4, h5, h6 {
+                    font-size: 12px;
+                    font-family: Helvetica;
+                }
+                #detail-ticket td, #detail-ticket th, #detail-ticket tr, table#detail-ticket {
+                    font-family: Helvetica;
+                    /*font-family: Arial, Helvetica, sans-serif;*/
+                    color: black !important;
+                    border-top: 1px solid black;
+                    border-collapse: collapse;
+                    color: black !important;
+                }
+            </style>
+            <p class="text-center pb-0 mb-0" style="text-align: center; padding-bottom: 0px; margin-bottom: 0px;">
+                <img src="assets/dog_logo_update.png" alt="Logotipo" style="width: 65%;">
+            </p>
+            <p class="centrado mt-2 mb-2 font-weight-bold" style="font-size: 12.2px; color: black; text-align: center;">
+                Celulares y Accesorios del Sureste, S.A. de C.V.<br>
+                Calle 23 #53-A x 8 y 10. Colonia México<br>
+                Mérida, Yucatán, México<br>
+                CP 97125<br>
+                RFC: CAS000522RC7<br>
+            </p>
+            <hr class="mb-1 mt-2" style="border-color: black !important; margin-bottom: 10px; margin-top: 15px;">
+            <h4 class="text-center mb-0" style="font-size: 15px !important; text-align: center; color: black; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px;">TICKET</h4>
+            <h6 class="text-center mb-0" style="font-size: 15px !important; text-align: center; color: black; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px;">{{ ticketInfo.ticket }}</h6>
+            <hr class="mb-2 mt-1" style="border-color: black !important; margin-bottom: 15px; margin-top: 10px;">
+            
+            <table class="w-100 mb-3" style="width: 100%; margin-bottom: 10px;">
+                <tr style="visibility: collapse;">
+                    <th style="width: 30%;">x</th>
+                    <th>x</th>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px !important;"><b>Tienda:</b></td>
+                    <td style="text-transform: capitalize; font-size: 12px !important;">{{ ticketInfo.shop.toLowerCase() }}</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px !important;"><b>Vendedor:</b></td>
+                    <td style="text-transform: capitalize; font-size: 12px !important;">{{ ticketInfo.salesman.toLowerCase() }}</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px !important;"><b>Caja:</b></td>
+                    <td style="font-size: 12px !important;">{{ ticketInfo.caja }}</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px !important;"><b>Venta:</b></td>
+                    <td style="font-size: 12px !important;">{{ dateTicket }}</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px !important;"><b>Cliente:</b></td>
+                    <td style="font-size: 12px !important; text-transform: capitalize;">{{ ticketInfo.clientName.toLowerCase() }}</td>
+                </tr>
+                <tr *ngIf="isFinancingTicket()">
+                    <td style="font-size: 12px !important;"><b>Financimiento:</b></td>
+                    <td style="font-size: 12px !important;">{{ ticketInfo.SL }}</td>
+                </tr>
+                <div *ngIf="this.ticketInfo.tae_response != null">
+                    <tr>
+                        <td style="font-size: 12px !important;"><b>No Transacción:</b></td>
+                        <td style="font-size: 12px !important;">{{ pad(this.ticketInfo.tae_response.id) }}</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 12px !important;"><b>No Autorización:</b></td>
+                        <td style="font-size: 12px !important;">{{ pad(this.ticketInfo.tae_response.Folio) }}</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 12px !important;"><b>Monto:</b></td>
+                        <td style="font-size: 12px !important;">{{ this.ticketInfo.tae_response.costo | currency}}</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 12px !important;"><b>Teléfono:</b></td>
+                        <td style="font-size: 12px !important;">{{ formatNumber(this.ticketInfo.tae_response.telefono) }}</td>
+                    </tr>
+                </div>
+                
+            </table>
+            
+            <table id="detail-ticket" style="width: 100%; color: black !important; border-top: 1px solid black; border-collapse: collapse; color: black !important;">
+                <thead>
+                    <tr style="color: black !important;border-top: 1px solid black;border-collapse: collapse;color: black !important;">
+                        <th class="producto" style="width: 68% !important;">Articulo</th>
+                        <th class="precio">Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr *ngFor="let p of this.ticketInfo.detail" style="color: black !important;border-top: 1px solid black;border-collapse: collapse;color: black !important;">
+                        <td class="producto" style="font-size: 11.5px;">
+                            <b>{{ p.quantity }}x</b> {{ p.nombre.toUpperCase() }}
+                            <span *ngIf="p.hasOwnProperty('imei')" style="font-size: 0.7rem !important; display: block !important; font-weight: 500 !important;"><strong>IMEI: </strong>{{ p.imei }}</span>
+                        </td>
+                        <td class="precio" style="font-size: 11.5px;">{{ p.price | currency }}</td>
+                    </tr>
+
+                    <tr *ngFor="let p of this.ticketInfo.detailPromo" style="color: black !important;border-top: 1px solid black;border-collapse: collapse;color: black !important;">
+                        <td class="producto" style="font-size: 11.5px;">
+                            <b>1x</b> {{ p.promoName.toUpperCase() }}
+                            <span *ngFor="let m of p.group" style="font-size: 77% !important; font-weight: 400 !important; display: block !important;">{{ m.nombre }}</span>
+                        </td>
+                        <td class="precio" style="font-size: 11.5px;">{{ p.price | currency }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <br>
+            <table class="w-100 text-right" style="width: 100%; text-align: right; color: black !important;">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td><b>SubTotal:</b></td>
+                    <td>{{ calculateSubTotal() | currency }}</td>
+                </tr>
+                <tr>
+                    <td><b>IVA:</b></td>
+                    <td>{{ calculateTotalIVA() | currency }}</td>
+                </tr>
+                <!--<tr>
+                    <td><b>Descuento:</b></td>
+                    <td>{{ ticketInfo.discount | currency }}</td>
+                </tr>-->
+                <tr>
+                    <td><b>Total:</b></td>
+                    <td>{{ ticketInfo.total | currency }}</td>
+                </tr>
+                <tr>
+                    <td><b>Cambio:</b></td>
+                    <td>{{ ticketInfo.changes | currency }}</td>
+                </tr>
+            </table>
+            <br>
+
+            <p *ngIf="ticketInfo.discount > 0" class="centrado mt-3 mb-2" style="text-align: center; color: black; font-size: 12px; margin-top: 10px; margin-bottom: 0px;"><b>USTED AHORRO: {{ ticketInfo.discount | currency }}</b></p>
+            <p class="centrado mt-1 mb-0" style="text-align: center; color: black; font-size: 12px; margin-bottom: 0px; margin-top: 0px;"><b>¡GRACIAS POR SU COMPRA!</b></p>
+            <p *ngIf="isPaidAccountTicket()" class="centrado mt-1 mb-2" style="text-align: center; color: black; font-size: 11.5px; margin-bottom: 7px; margin-top: 7px;"><b>NOTA:</b> Recuerda que para que tu equipo pueda desbloquearse, es necesario que tenga conexión vía internet, ya sea mediante datos o wifi.</p>
+            <br>
+            <p class="text-center" style="font-size: 10.8px; text-align: center; color: black !important;" *ngIf="this.ticketInfo.tae_response != null">
+                <b>Nota: </b> Estimado cliente en caso de presentarse algún problema con su tiempo aire favor de comunicarse a atención a clientes TELCEL *264 desde su telcel o desde el interior de la república al 01800-710-5687. Vigencia del tiempo aire abonado: 30 Días
+            </p>
+            <p class="text-center" style="font-size: 10.8px; text-align: center; color: black !important;" *ngIf="this.ticketInfo.tae_response == null">
+                <b>Nota: </b>Garantía de 30 días en Gadgets o accesorios electrónicos tales como cables, bocinas, audífonos, cargadores baterías externas. Equipos G 5 días de garantía. 
+                Equipos Seminuevos Phone OK 30 Días de Garantía. Telefonía libre y Selfix 1 Año de Garantía. 
+                (No aplica en rebajas ni en promociones). IMPORTANTE Para hacer válida la garantía del teléfono Kit de Telcel, deberá haber realizado una llamada con costo al momento de la compra. 
+                Una vez salida la mercancía del establecimiento, no hay cambios ni devoluciones.
+            </p>
+            <br>
+            <p style="font-size: 11px; color: black; margin: 0px; padding-top: 2px; text-align: center;"><b>Printing in Phoenix Suite</b></p>
+        </div>
+    </body>
+</html>

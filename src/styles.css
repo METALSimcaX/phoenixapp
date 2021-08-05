@@ -1,0 +1,180 @@
+/* You can add global styles to this file, and also import other style files */
+
+body
+{
+    font-family: 'Montserrat', sans-serif;
+    background: #f6f5f7;
+    /*height: 100vh;*/
+    margin: 0;
+    padding: 0;
+}
+
+.mt-small
+{
+    margin-top: 0.5em !important;
+}
+
+.mt-1
+{
+    margin-top: 1em !important;
+}
+
+.mt-2
+{
+    margin-top: 2em !important;
+}
+
+.mb-small
+{
+    margin-bottom: 0.5em !important;
+}
+
+.mb-1
+{
+    margin-bottom: 1em !important;
+}
+
+.mb-2
+{
+    margin-bottom: 2em !important;
+}
+
+.font-bold
+{
+    font-weight: bold !important;
+}
+
+.table-header-smaller thead th
+{
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.55rem !important;
+    font-size: 0.56rem !important;
+}
+
+.table-header-smaller tbody td
+{
+    padding-top: 0.58rem !important;
+    padding-bottom: 0.58rem !important;
+    /*font-size: 0.6rem !important;*/
+    font-weight: 600;
+    font-size: 0.8em !important;
+}
+
+.bg-brand-primary
+{
+    background-color: #004a87 !important;
+}
+
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link.active
+{
+    background: #004a87 !important;
+    color: white !important;
+}
+
+.text-brand-secondary
+{
+    color: #fcdc00 !important;
+}
+
+.text-brand-primary
+{
+    color: #004a87 !important;
+}
+
+.bg-brand-secondary
+{
+    background-color: #fcdc00 !important;
+}
+
+button.swal2-confirm.btn.btn-info
+{
+    background-color: #004a87;
+}
+
+.datatable-body-row.active
+{
+    background-color: #0260af !important;
+}
+
+#toast-container div
+{
+    top: 32rem;
+    right: -20rem;
+}
+
+/* Suffix this section at the end of your styles.css for toogling between @media screen and @media print mode */
+/*############################################################################################################*/
+app-ticket {
+    /* hide the printing component from @media screen */
+    display: none;
+  }
+  
+  @media print {
+    /* invert the display (show/hide) properties of the main */
+    /* aplication component and the printing component       */
+  
+    app-ticket {
+      display: block;
+    }
+  
+    app-payment {
+      display: none;
+    }
+  }
+  /*#############################################################################################################*/
+/* width of scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0, 73, 135, 0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0, 73, 135, 0.4); 
+}
+
+#notification-electron
+{
+    position: fixed;
+    top: 10em;
+    left: 20px;
+    width: 200px;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.hidden-electron
+{
+    display: none;
+}
+
+.salesman-box:hover
+{
+    border: 1px solid #1f68ad;
+    border-radius: 5px;
+    color: white !important;
+    background-color: #2778c4;
+}
+
+.salesman-box-active
+{
+    border: 1px solid #1f68ad !important;
+    border-radius: 5px !important;
+    color: white !important;
+    background-color: #2778c4 !important;
+}

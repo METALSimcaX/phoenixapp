@@ -1,0 +1,518 @@
+<div class=" row hidden-print">
+    <div class=" col-xl-12">
+        <div class=" card" *ngIf="!hasDrawerClosed">
+            <div class=" card-header bg-transparent">
+                <div>
+                    <div style="float: left;">
+                        <h5 class=" h3 mb-0">{{current_step}}</h5>
+                    </div>
+                    <div style="float: right;">
+                        <button *ngIf="hasFinishClose" class="hidden-print btn btn-default" type="button" (click)="imprimir()">IMPRIMIR</button> 
+                    </div>
+                </div>
+                <!--div class=" row align-items-center">
+                    <div class=" col">
+    
+                        <h5 class=" h3 mb-0">{{current_step}}</h5>
+                    </div>
+                </div-->
+            </div>
+    
+            <div class="card-body" *ngIf="step=='1'">
+                <h5 class=" h3 mb-0">Ingrese la cantidad que tiene actualmente en caja</h5>
+                <div class="grid">
+                    <ng-container *ngFor="let bill of bills;let index = index;trackBy:trackByIndex;">
+                        <div style="margin: 20px;">
+                            <img src="./assets/img/bills/{{bill.imagen}}" style="width: 80%;margin-bottom: 20px;">
+                            <div *ngIf="bills[index].tipo == 'E'">
+                                <input type="number" style="width: 80%;" [(ngModel)]="bills[index].cantidad" (change)="calculateTotalCash(index)" onkeypress="return event.charCode >= 48 || event.charCode == 44" min="0.00"><br>
+                                <label>{{bills[index].valor * bills[index].cantidad | currency}}</label>
+                            </div>
+                            <div *ngIf="bills[index].tipo == 'T'">
+                                <input type="number" style="width: 80%;" [(ngModel)]="bills[index].cantidad" (change)="calculateTotalTransacctions(bills[index],index)" onkeypress="return event.charCode >= 48 || event.charCode == 44" min="0.00"><br>
+                                <label >{{bills[index].valor}}</label>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="border border-primary rounded">
+                    <div class="row">
+                        <div class="col">
+                            <label class="text-primary" style="font-weight: bold;">Usuario</label>
+                        </div>
+                        <div class="col">
+                            <label class="text-primary" style="font-weight: bold;">Centro</label>
+                        </div>
+                        <div class="col">
+                            <label class="text-primary" style="font-weight: bold;">Caja</label>
+                        </div>
+                        <div class="col">
+                            <label class="text-primary" style="font-weight: bold;">Fecha</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label style="font-weight: bold;">{{username}}</label>
+                        </div>
+                        <div class="col">
+                            <label style="font-weight: bold;">{{centro}}</label>
+                        </div>
+                        <div class="col">
+                            <label style="font-weight: bold;">{{caja}}</label>
+                        </div>
+                        <div class="col">
+                            <label style="font-weight: bold;">{{today | date:'h:mm a dd/MM/yyyy'}}</label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="border border-primary rounded">
+                    <div class="row">
+                        <div class="col">
+                            <div>
+                                <img src="assets/img/payment/p_money.png" style="margin: 5px;">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div>
+                                <label style="font-weight: bold;">Total en efectivo</label><br>
+                                <label>{{ cash_total | currency}}</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div>
+                                <img src="assets/img/payment/p_bbva.png" style="margin: 5px;">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div>
+                                <label style="font-weight: bold;">Numero de váucher BBVA</label><br>
+                                <label>{{t_bbva}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div>
+                                <img src="assets/img/payment/p_citibanamex.png" style="margin: 5px;">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div>
+                                <label style="font-weight: bold;">Numero de váucher Banamex</label><br>
+                                <label>{{t_banamex}}</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div>
+                                <img src="assets/img/payment/p_hsbc.png" style="margin: 5px;">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div>
+                                <label style="font-weight: bold;">Numero de váucher HSBC</label><br>
+                                <label>{{t_hsbc}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+
+                <button type="button" class="btn btn-primary btn-lg btn-block" (click)="open(classic2, 'Notification', '')">Confirmar</button>
+            </div>
+
+            <div class="card-body" *ngIf="step=='2og'">
+                <ul class="list-group">
+                    <li class="list-group-item active">
+                        <div style="float: left;font-weight: bold;">Información</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Efectivo inicial</div> 
+                        <div style="float: right;">{{drawerApertureData.monto_apertura | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Ventas</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+
+                    <li class="list-group-item active">
+                        <div style="float: left;font-weight: bold;">Vías de pago</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Efectivo</div> 
+                        <div style="float: right;">{{"0" | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Debito</div> 
+                        <div style="float: right;">{{"0" | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Crédito</div> 
+                        <div style="float: right;">{{"0" | currency}}</div>   
+                    </li>
+
+
+                    <li class="list-group-item active">
+                        <div style="float: left;font-weight: bold;">Información de efectivo</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Esperado en caja</div> 
+                        <div style="float: right;">{{"30000" | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Actual en caja</div> 
+                        <div style="float: right;">{{cash_total | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Diferencia</div> 
+                        <div style="float: right; color: forestgreen;" *ngIf="cash_total - 30000>= 0">{{cash_total - 30000 | currency}}</div>
+                        <div style="float: right; color: red;" *ngIf="cash_total - 30000< 0">{{cash_total - 30000  | currency}}</div>   
+                    </li>
+                  </ul>
+                  <button type="button" class="btn btn-primary btn-lg btn-block" (click)="goToDashboard()">OK</button>
+                  <!--button type="button" class="btn btn-primary btn-lg btn-block" (click)="closeDrawer(classic)">CERRAR CAJA</button-->
+            </div>
+
+            <div class="card-body" *ngIf="step=='2'">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Información de ventas</h3>
+                    </div>
+                    <div class=" table-responsive">
+                        <table class=" table align-items-center table-flush">
+                            <thead class=" thead-light">
+                                <tr>
+                                  <th scope="col">Metodo de pago</th>
+                        
+                                  <th scope="col">Esperado</th>
+                        
+                                  <th scope="col">Real</th>
+                        
+                                  <th scope="col">Diferencia</th>
+                                </tr>
+                              </thead>
+                              <tbody class="list">
+                                <tr>
+                                    <th scope="row">
+                                        Terminal Citibanamex
+                                    </th>
+                                    <th scope="row">
+                                        {{t_banamex_esperado}}
+                                    </th>
+                                    <th scope="row">
+                                        {{t_banamex}}
+                                    </th>
+                                    <th scope="row">
+                                        <div [ngClass]="{'negative': t_banamex - t_banamex_esperado < 0, 'positive' : t_banamex - t_banamex_esperado >= 0 }">
+                                            {{t_banamex - t_banamex_esperado}}
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Terminal HSBC
+                                    </th>
+                                    <th scope="row">
+                                        {{t_hsbc_esperado}}
+                                    </th>
+                                    <th scope="row">
+                                        {{t_hsbc}}
+                                    </th>
+                                    <th scope="row">
+                                        <div [ngClass]="{'negative': t_hsbc - t_hsbc_esperado < 0, 'positive' : t_hsbc - t_hsbc_esperado >= 0 }">
+                                            {{t_hsbc - t_hsbc_esperado}}
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Terminal BBVA
+                                    </th>
+                                    <th scope="row">
+                                        {{t_bbva_esperado}}
+                                    </th>
+                                    <th scope="row">
+                                        {{t_bbva}}
+                                    </th>
+                                    <th scope="row">
+                                        <div [ngClass]="{'negative': t_bbva - t_bbva_esperado < 0, 'positive' : t_bbva - t_bbva_esperado >= 0 }">
+                                            {{t_bbva - t_bbva_esperado}}
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Efectivo
+                                    </th>
+                                    <th scope="row">
+                                        {{cash_expected | currency}}
+                                    </th>
+                                    <th scope="row">
+                                        {{cash_total | currency}}
+                                    </th>
+                                    <th scope="row">
+                                        <div [ngClass]="{'negative': cash_total - cash_expected < 0, 'positive' : cash_total - cash_expected >= 0 }">
+                                            {{cash_total - cash_expected | currency}}
+                                        </div>
+                                    </th>
+                                </tr>
+                              </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="text-align: center;" *ngIf="!blind_close">
+                    <button type="button" class="btn btn-primary" style="display: inline-block; width: 40%;" *ngIf="!hasFinishClose" (click)="backToCash()">REGRESAR</button>
+                    <button type="button" class="btn btn-primary" style="display: inline-block; width: 40%;" *ngIf="!hasFinishClose" (click)="showConfirmation(confirmation)">CERRAR CAJA</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" *ngIf="hasFinishClose" (click)="goToDashboard()">OK</button>
+                </div>
+                  <div style="text-align: center;" *ngIf="blind_close">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" (click)="goToDashboard()">OK</button>
+                  </div>
+                </div>
+
+            <div class="card-body" *ngIf="step=='3'">
+                <form [formGroup]="this.formDrawer">
+                <ul class="list-group">
+                    <li class="list-group-item active">
+                        <div style="float: left;font-weight: bold;">Ventas</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Efectivo</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Debito HSBC</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Crédito HSBC</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Debito BBVA</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Crédito BBVA</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Debito Citibanamex</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Tarjeta Crédito Citibanamex</div> 
+                        <div style="float: right;">0</div>   
+                    </li>
+
+                    <li class="list-group-item active">
+                        <div style="float: left;font-weight: bold;">Información de tarjetas</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Terminal Citibanamex</div> 
+                        <input style="float: right;" type="number" [(ngModel)]="t_banamex">  
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Terminal HSBC</div> 
+                        <input style="float: right;" type="number" [(ngModel)]="t_hsbc">  
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Terminal BBVA</div> 
+                        <input style="float: right;" type="number" [(ngModel)]="t_bbva">  
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Ventas con Tarjetas Esperado</div> 
+                        <div style="float: right;">30</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Ventas con Tarjetas Real</div> 
+                        <div style="float: right;">{{t_banamex + t_bbva + t_hsbc}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Diferencia</div> 
+                        <div style="float: right; color: forestgreen;" *ngIf="t_banamex + t_bbva + t_hsbc - 30 >= 0">{{t_banamex + t_bbva + t_hsbc - 30}}</div>
+                        <div style="float: right; color: red;" *ngIf="t_banamex + t_bbva + t_hsbc - 30< 0">{{t_banamex + t_bbva + t_hsbc - 30}}</div>   
+                    </li>
+                    
+                    <li class="list-group-item active">
+                        <div style="float: left;font-weight: bold;">Información de efectivo</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Efectivo inicial</div> 
+                        <div style="float: right;">{{0 | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Esperado en caja</div> 
+                        <div style="float: right;">{{"30000" | currency}}</div>   
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Actual en caja</div> 
+                        <input style="float: right;" type="number" [(ngModel)]="manual_cash">
+                    </li>
+                    <li class="list-group-item">
+                        <div style="float: left;font-weight: bold;">Diferencia</div> 
+                        <div style="float: right; color: forestgreen;" *ngIf="manual_cash - 30000 >= 0">{{manual_cash - 30000 | currency}}</div>
+                        <div style="float: right; color: red;" *ngIf="manual_cash - 30000< 0">{{manual_cash - 30000  | currency}}</div>   
+                    </li>
+                  </ul>
+                  <button type="button" class="btn btn-primary btn-lg btn-block" (click)="closeDrawer(classic)">CERRAR CAJA</button>
+                </form>
+            </div>
+
+            <ng-template #classic2 let-c="close" let-d="dismiss">
+                <div class="modal-content bg-gradient-danger">
+                  <div class="modal-header">
+                    <h6 class="modal-title" id="modal-title-notification">ATENCIÓN</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="d('Cross click')">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="py-3 text-center">
+                      <i class="ni ni-bell-55 ni-3x"></i>
+                      <h4 class="heading mt-4">Confirma las cantidades ingresadas</h4>
+                      <p>Asegurate de que las cantidades ingresadas concuerden con lo esperado real.</p>
+                      <p>Efectivo declarado: {{cash_total | currency}}</p>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" *ngIf="!blind_close" class="btn btn-white" (click)="showDetail()">Proceder</button>
+                    <button type="button" *ngIf="blind_close" class="btn btn-white" (click)="showConfirmation(confirmation)">Proceder</button>
+                    <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal" (click)="c('Close click')">Cerrar</button>
+                  </div>
+                </div>
+              </ng-template>
+
+              <ng-template #confirmation let-c="close" let-d="dismiss">
+                <div class="modal-content bg-gradient-danger">
+                  <div class="modal-header">
+                    <h6 class="modal-title" id="modal-title-notification">ATENCIÓN</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="d('Cross click')">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="py-3 text-center">
+                      <i class="ni ni-bell-55 ni-3x"></i>
+                      <h4 class="heading mt-4">Acepto que las cantidades ingresadas son correctas</h4>
+                      <p>Entiendo que una vez que presione el boton "Proceder" no podre realizar ningun cambio y acepto
+                          las responsabilidades asociadas.</p>
+                      <p>Efectivo declarado: {{cash_total | currency}}</p>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-white" (click)="next()">Proceder</button>
+                    <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal" (click)="c('Close click')">Cerrar</button>
+                  </div>
+                </div>
+              </ng-template>
+              
+        </div>
+
+        <div class=" card" *ngIf="hasDrawerClosed">
+            <div class="alert alert-warning" role="alert">
+                <strong>Atención</strong> La caja se encuentra cerrada, por favor abre la caja actual para crear una nueva.
+            </div>
+        </div>
+    </div>
+</div>     
+
+<div class="ticket" id="ticket">
+    <!--img
+        src="https://macrocel.mx/wp-content/uploads/2019/10/macropay_logo-300x88.png"
+        alt="Logotipo"-->
+    <div>
+        <img
+        src="assets/macropay_logo_bw.jpg"
+        alt="Logotipo" class="img-logo " style="width: 100%; display:block; margin:auto;">
+    </div>    
+
+    <div style="text-align: center; width: 100%;display: block;">
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">Celulares y Accesorios</span>
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">del sureste S.A. de C.V.</span> 
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">Calle 23 No. 53-A por 8 y 10</span> 
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">Colonia México</span> 
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">Mérida, Yucatán, México</span> 
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">CP 97125</span> 
+        <span style="text-align: center; width: 100%; font-size: 12px; display: block;">RFC: CAS000522RC7</span>
+    </div>
+    <hr style="
+    border: 1px solid black; 
+    width: 100%; 
+    float: left;"> <br>
+
+    <h2 style="text-align: center;">Cierre de Caja</h2>
+     
+    <div style="width: 100%;font-size: 12px;">
+        <div style="float: left;">Folio: </div> 
+        <div style="float: right;">{{id_estatus}}</div>
+    </div>
+    <br>
+    <div style="width: 100%;font-size: 12px;">
+        <div style="float: left;">Fecha: </div> 
+        <div style="float: right;">{{today | date:'yyyy/MM/dd h:mm a'}}</div>
+    </div>
+    <br>
+    <div style="width: 100%;font-size: 12px;">
+        <div style="float: left;">Importe (MXN): </div> 
+        <div style="float: right;">{{total_amount_sales | currency}}</div>
+    </div>
+
+    <table style="width: 100%;font-size: 12px;border-top: 1px solid black;border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>METODO PAGO</th>
+                <th>MONTO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let sale of salesTable">
+                <td>{{sale.metodo}}</td>
+                <td>{{sale.importe | currency}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <!--p style="text-align: center;">¡GRACIAS POR SU COMPRA!<br>MACROPAY</p-->
+</div>
+<!--button class="hidden-print" (click)="imprimir()">Imprimir</button-->
+
+<ng-template #classic let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="modal-title-default">Caja Cerrada para el dia de hoy {{today | date:'h:mm a'}}</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Para realizar mas operaciones en esta caja, es necesario abrirla de nuevo.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">OK</button>
+      </div>
+    </div>
+  </ng-template>
+
+<ng-template #classic let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="modal-title-default">Caja Cerrada para el dia de hoy {{today | date:'h:mm a'}}</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Para realizar mas operaciones en esta caja, es necesario abrirla de nuevo.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">OK</button>
+      </div>
+    </div>
+  </ng-template>
+

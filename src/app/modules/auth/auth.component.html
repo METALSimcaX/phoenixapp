@@ -1,0 +1,24 @@
+<div class="content-main-full-view">
+    <div class="container" id="container">
+ 
+       <div class="form-container sign-in-container">
+          <form [formGroup]="this.formLogin">
+             <h1 class="mb-small">Iniciar Sesión</h1>
+             <input type="text" name="username" formControlName="username" placeholder="Username" />
+             <input type="password" name="password" formControlName="password" placeholder="Password" />
+             <!--<a class="font-bold" href="#">¿Olvidaste tu contraseña?</a>-->
+             <button id="btn-login" (click)="signInApplication()" [disabled]="!this.formLogin.valid">Ingresar</button>
+          </form>
+       </div>
+       <div class="overlay-container">
+          <div class="overlay">
+             <div class="overlay-panel overlay-right">
+                <img src="./assets/phoenix_mp3.png" style="max-width: 80%;">
+                <!--<img src="https://www.intranet.macropay.com.mx/assets/home-tema/img/Logos/Blancos/Logo GM_Blanco.png" style="max-width: 40%;"-->
+                <h1 class="mt-small text-brand-secondary">Phoenix Suite</h1>
+             </div>
+          </div>
+       </div>
+    
+    </div>
+ </div>

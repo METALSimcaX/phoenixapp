@@ -1,0 +1,129 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+}
+ 
+ 
+@media only screen and (min-width: 800px) {
+ 
+    .grid {
+        display: grid;
+        grid-template-columns: 3fr 3fr 3fr 3fr;
+    }
+ 
+}
+
+.negative {
+    color: red;
+}
+
+.positive {
+    color: forestgreen;
+}
+
+.container {
+    display: flex;
+}
+
+.vcenter {
+    display: flex;
+    align-items: center;
+  }
+  
+  #box {
+    height: 100px;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+
+  
+
+td,
+th,
+tr,
+table {
+    border-top: 1px solid black;
+    border-collapse: collapse;
+}
+
+td.product,
+th.product {
+    width: 80px;
+    max-width: 80px;
+}
+
+td.quantity,
+th.quantity {
+    width: 45px;
+    max-width: 45px;
+    word-break: break-all;
+}
+
+td.price,
+th.price {
+    width: 45px;
+    max-width: 45px;
+    word-break: break-all;
+}
+
+.center {
+    text-align: center;
+    align-content: center;
+}
+
+.ticket {
+    border: 2px solid black;
+    width: 300px;
+    max-width: 300px;
+	display: none;
+    margin-left: 0%;
+    margin-right: 0%;
+}
+
+.small-header {
+    text-align: center; 
+    width: 100%;
+    font-size: 18px;
+    display: block;
+}
+
+.header {
+    text-align: center; 
+    width: 100%;
+    font-size: small;
+    display: block;
+}
+
+img {
+    max-width: inherit;
+    width: inherit;
+}
+
+.img-logo {
+    filter: grayscale(1);
+}
+
+@media print {
+	.ticket {
+        border: 2px dotted black;
+		display: block !important;
+        width: 300px;
+        max-width: 300px;
+        margin-left: 0%;
+        margin-right: 0%;
+	}
+	
+    .hidden-print,
+    .hidden-print * {
+        display: none !important;
+    }
+
+    * {
+        font-size: 22px;
+        font-family: 'Times New Roman';
+        color: black;
+    }
+}

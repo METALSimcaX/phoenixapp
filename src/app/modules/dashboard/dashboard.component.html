@@ -1,0 +1,7 @@
+<div class="" (window:resize)="isMobile($event)">
+	<app-sidemenu [ngClass]="{ 'sidenav fixed-left': isMobileResolution === false }"></app-sidemenu>
+
+<div class="main-content">
+	<app-nav-header></app-nav-header>
+	<router-outlet></router-outlet>
+</div>

@@ -1,0 +1,20 @@
+#sidenav-main
+{
+    /*max-width: 250px !important;*/
+}
+
+.navbar-brand
+{
+    display: block;
+}
+
+@media print {
+	.navbar-brand {
+        display: none !important;
+    }
+
+    #sidenav-main
+    {
+    max-width: 0px !important;
+    }
+}

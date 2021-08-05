@@ -1,0 +1,535 @@
+.pd-special-operations {
+   padding: 1.3rem 1rem !important;
+}
+
+.pd-special-operations p,
+.pd-special-operations i {
+   color: #f7e778 !important;
+}
+
+.table-detail-total {
+   width: 50%;
+   font-size: 0.7rem;
+   float: right;
+}
+
+datatable-header-cell.datatable-header-cell.resizeable.sortable {
+   padding: 0.5rem 0.5rem !important;
+   text-align: center;
+}
+
+.search-header-modal {
+   position: absolute;
+   right: 4em;
+   top: 0.9em;
+}
+
+.size-table-restriction {
+   min-height: 22em;
+   max-height: 22.1em;
+}
+
+.icon-medium-size {
+   font-size: 2.5em !important;
+}
+
+.btns-card-height {
+   min-height: 28em;
+   max-height: 28.1em;
+   overflow-y: auto;
+}
+
+.btns-card-height button {
+   background: linear-gradient(to right, #004987, #053154) no-repeat 0 0 / cover;
+}
+
+.bg-blue-img {
+   background-image: src("assets/bg-blue-macro.jpg");
+}
+
+.datatable-body-cell-label,
+.ngx-datatable.bootstrap {
+   font-size: 0.8rem !important;
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell,
+datatable-header-cell.datatable-header-cell.resizeable.sortable {
+   padding: 0.3rem !important;
+}
+
+.table-detail-total tr {
+   font-size: 2em !important;
+}
+
+#btn-container-payments {
+   margin: 5px 10px;
+   display: inline-flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+}
+
+#btn-container-payments button {
+   width: 104px !important;
+}
+
+button.pd-special-operations:disabled,
+button.pd-special-operations[disabled] {
+   background: linear-gradient(to right, #004987b8, #053154e0) no-repeat 0 0 /
+      cover !important;
+}
+
+.grid {
+   display: grid;
+   grid-template-columns: 3fr 3fr 3fr;
+}
+
+.grid-4 {
+   display: grid;
+   grid-template-columns: 3fr 3fr 3fr 3fr;
+}
+
+.container-box-center {
+   position: relative;
+   text-align: center;
+   color: white;
+}
+
+.centered-text {
+   position: absolute;
+   top: 60%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
+#btn-find-client {
+   border: none !important;
+   background-color: transparent !important;
+   outline: none !important;
+}
+
+/* BUTTON FLOAT */
+.flBtn {
+   position: fixed;
+   z-index: 1000;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   border: 0;
+   outline: none;
+   text-decoration: none;
+}
+
+.flBtn ul {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   border: 0;
+   outline: none;
+   text-decoration: none;
+   position: absolute;
+   visibility: hidden;
+}
+
+.flBtn input {
+   position: absolute;
+   z-index: 3;
+   top: 0;
+   left: 0;
+   display: block;
+   width: 100%;
+   height: 100%;
+   cursor: pointer;
+   opacity: 0;
+}
+
+.flBtn input:checked ~ ul {
+   visibility: visible;
+}
+
+.flBtn input:checked ~ ul li {
+   visibility: visible;
+   opacity: 1;
+}
+
+.flBtn input:hover + a {
+   color: white;
+   background: #ac0d0d;
+}
+
+.flBtn input:hover + a[tooltip]:before {
+   visibility: visible;
+   opacity: 1;
+}
+
+.flBtn a {
+   border-radius: 30px !important;
+   background-color: #870000 !important;
+   position: relative;
+   z-index: 2;
+   display: block;
+   vertical-align: middle;
+   text-decoration: none;
+   text-align: center;
+   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+   cursor: pointer;
+   background: #009688;
+   color: #ffffff;
+   transition: #ac0d0d 0.5s;
+   -o-transition: #ac0d0d 0.5s;
+   -ms-transition: #ac0d0d 0.5s;
+   -moz-transition: #ac0d0d 0.5s;
+   -webkit-transition: #ac0d0d 0.5s;
+}
+.flBtn a:hover {
+   color: white;
+   background: #ac0d0d;
+}
+.flBtn ul li {
+   display: inline-block;
+   margin: 5px;
+   visibility: hidden;
+   opacity: 0;
+   transition: all 0.5s;
+   -o-transition: all 0.5s;
+   -ms-transition: all 0.5s;
+   -moz-transition: all 0.5s;
+   -webkit-transition: all 0.5s;
+}
+.flBtn [tooltip]:before {
+   position: absolute;
+   content: attr(tooltip);
+   visibility: hidden;
+   opacity: 0;
+   padding: 0 10px;
+   white-space: nowrap;
+   background: rgba(0, 0, 0, 0.8);
+   color: #ffffff;
+   transition: all 0.5s;
+}
+.flBtn [tooltip]:hover:before {
+   visibility: visible;
+   opacity: 1;
+}
+
+.flBtn-size-medium a {
+   width: 60px;
+   height: 60px;
+   line-height: 60px;
+   font-size: 24px;
+}
+.flBtn-size-medium ul a {
+   border-radius: 30px !important;
+   width: 230px;
+   height: 40px;
+   margin-top: 0.42rem;
+   /*width: 40px;
+    height: 40px;*/
+   line-height: 40px;
+   font-size: 16px;
+}
+.flBtn-size-medium [tooltip]:before {
+   height: 30px;
+   line-height: 30px;
+   font-size: 16px;
+}
+
+.flBtn-position-br {
+   bottom: 20px;
+   right: 20px;
+}
+.flBtn-position-br [tooltip][data-role]:before {
+   right: 100%;
+   bottom: 100%;
+}
+
+.flBtn-position-br .flBtn-first {
+   /*right: 50%;*/
+   right: 7.5rem;
+   transform: translateX(50%);
+   bottom: 100%;
+}
+
+.flBtn-position-br .flBtn-first [tooltip]:before {
+   right: 100%;
+   top: 50%;
+   transform: translateY(-50%);
+   margin-right: 5px;
+}
+
+.flBtn-position-br .flBtn-second {
+   display: flex;
+   top: 50%;
+   transform: translateY(-50%);
+   right: 100%;
+}
+
+.flBtn-position-br .flBtn-second [tooltip]:before {
+   right: 100%;
+   bottom: 100%;
+   margin-bottom: 5px;
+}
+/* END CSS */
+
+.truncate-promo-text {
+   width: 175px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   height: 25px;
+   display: inline-block;
+}
+
+#table-cart-sale td,
+#table-cart-sale th {
+   padding-left: 0.8rem !important;
+   padding-right: 0.8rem !important;
+}
+
+.material-in-promo {
+   font-size: 73% !important;
+   font-weight: 600 !important;
+   display: block !important;
+   color: red !important;
+}
+
+.text-imei-cart {
+   font-size: 0.7rem !important;
+   display: block !important;
+   font-weight: 500 !important;
+   color: #f30e0e;
+}
+
+/* Style the tab */
+.tab {
+   float: left;
+   /*border: 1px solid #ccc;
+    background-color: #f1f1f1;*/
+   width: 40%;
+   height: auto;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+   display: block;
+   background-color: inherit;
+   color: black;
+   /*padding: 22px 16px;*/
+   width: 100%;
+   border: none;
+   outline: none;
+   text-align: left;
+   cursor: pointer;
+   transition: 0.3s;
+   font-size: 17px;
+   /*height: 20px;*/
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+   background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+   background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+   float: left;
+   padding: 0px 12px;
+   /*border: 1px solid #ccc;*/
+   width: 60%;
+   border-left: none;
+   height: 410px;
+}
+
+.pinButton {
+   border: none;
+   background: none;
+   font-size: 1.5em;
+   /*border-radius: 50%;
+   height: 60px;*/
+   font-weight: 550;
+   width: 60px;
+   color: transparent;
+   text-shadow: 0 0 0 rgb(102, 101, 101);
+   margin: 7px 20px;
+}
+
+.optionButton {
+   border: none;
+   background: #47cf73;
+   font-size: 1em;
+   font-weight: 500;
+   width: 100px;
+   color: transparent;
+   text-shadow: 0 0 0 #fff;
+   margin: 7px 20px;
+}
+
+.deleteButton {
+   border: none;
+   background: #ff3c41;
+   font-size: 1em;
+   font-weight: 500;
+   width: 100px;
+   color: transparent;
+   text-shadow: 0 0 0 #fff;
+   margin: 7px 20px;
+}
+
+.clear,
+.point {
+   font-size: 1em !important;
+}
+
+.pinButton:hover {
+   box-shadow: #506ce8 0 0 1px 1px;
+}
+.pinButton:active {
+   background: #506ce8;
+   color: #fff;
+}
+
+.optionButton:disabled {
+   background: gray;
+   color: #fff;
+}
+
+.clear:hover {
+   box-shadow: #ff3c41 0 0 1px 1px;
+}
+
+.clear:active {
+   background: #ff3c41;
+   color: #fff;
+}
+
+.point:hover {
+   box-shadow: #47cf73 0 0 1px 1px;
+}
+
+.point:active {
+   background: #47cf73;
+   color: #fff;
+}
+
+/** CALCULATOR **/
+
+#calculator-content
+{
+   /*width: 500px;*/
+   margin: 0px;
+   font-family: "Source Sans Pro", sans-serif;
+   letter-spacing: 1px;
+   font-size: 1.5rem;
+   -moz-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+}
+
+.calculator {
+   padding: 0px;
+   border-radius: 1px;
+}
+
+.operators div {
+   display: inline-block;
+   border: 1px solid #bbb;
+   border-radius: 1px;
+   width: 80px;
+   text-align: center;
+   padding: 10px;
+   margin: 20px 4px 10px 0;
+   cursor: pointer;
+   background-color: #ddd;
+   transition: border-color 0.2s ease-in-out, background-color 0.2s,
+      box-shadow 0.2s;
+}
+
+.operators div:hover {
+   background-color: #ddd;
+   -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+   border-color: #aaa;
+}
+
+.operators div:active {
+   font-weight: bold;
+   background-color: #4878c9;
+   color: white;
+}
+
+.leftPanel {
+   display: inline-block;
+}
+
+#calculator-content .numbers div {
+   display: inline-block;
+   border: 1px solid #ddd;
+   /*border-radius: 1px;*/
+   width: 60px;
+   text-align: center;
+   padding: 10px;
+   margin-top: 8px;
+   margin-right: 15px;
+   margin-bottom: 8px;
+   margin-left: 0px;
+   cursor: pointer;
+   background-color: #f9f9f9;
+   transition: border-color 0.2s ease-in-out, background-color 0.2s,
+      box-shadow 0.2s;
+   border-radius: 50%;
+}
+
+#calculator-content .numbers div:hover {
+   background-color: #f1f1f1;
+   -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+   border-color: #bbb;
+}
+
+#calculator-content .numbers div:active {
+   font-weight: bold;
+}
+
+/** END CALCULATOR CSS **/
+
+#tab-buttons-method button.list-group-item.list-group-item-action.active
+{
+   border-radius: 0px;
+   background-color: #2b65c8 !important;
+   padding: 10px 10px;
+   color: white !important;
+}
+
+#tab-buttons-method button.list-group-item.list-group-item-action
+{
+   background-color: #a7c3f1 !important;
+   border-radius: 0px !important;
+   padding: 10px 10px;
+}
+
+.digit-calculator
+{
+   font-size: 1.5rem !important;
+   height: 2.9rem !important;
+   text-align: right !important;
+}
+
+@media (min-width: 992px)
+{
+   #modal-methods-pay .modal-lg, #modal-methods-pay .modal-xl 
+   {
+      max-width: 650px !important;
+   }
+}
+
+#tsparticles
+{
+   position: fixed;
+   width: 100%;
+   height: 100%;
+   z-index: 99999;
+}

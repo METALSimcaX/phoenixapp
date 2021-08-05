@@ -1,0 +1,61 @@
+<div class=" row">
+    <div class=" col-xl-12">
+        <div class=" card">
+            <div class=" card-header bg-transparent">
+                <div>
+                    <div style="float: left;">
+                        <h5 class=" h3 mb-0">Cajas</h5>
+                    </div>
+                    <div style="float: right;">
+                        <button type="button" class="btn btn-default" (click)="newDrawer()">AGREGAR CAJA</button>
+                    </div>
+                </div>
+            </div>
+    
+            <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table align-items-center table-flush">
+                      <thead class=" thead-light">
+                        <tr>
+                          <th class="sort" data-sort="name" scope="col">Caja</th>
+                
+                          <th class="sort" data-sort="budget" scope="col">Tipo</th>
+                
+                          <th class="sort" data-sort="status" scope="col">Estado</th>
+
+                          <th scope="col">Operación</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class=" list" *ngFor="let drawer of drawers">
+                        <tr>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    {{drawer.caja}}
+                                </div>
+                            </th>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    {{getType(drawer.tipo)}}
+                                </div>
+                            </th>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    {{getStatus(drawer.estatus)}}
+                                </div>
+                            </th>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    <button type="button" class="btn btn-default" *ngIf="drawer.estatus == 'A'" (click)="closeDrawer(drawer.id,drawer.centro,drawer.id_estatus,drawer.caja)">CERRAR</button>
+                                    <button type="button" class="btn btn-default" *ngIf="drawer.estatus == 'C'" (click)="openDrawer(drawer.id,drawer.centro)">ABRIR</button>
+                                </div>
+                            </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>    
+

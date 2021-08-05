@@ -1,0 +1,707 @@
+<div class="container mt-1 mb-3" *ngIf="this.canShowPOS === true">
+    
+    <!--<div class=" card" *ngIf="this.userSaleman == undefined || this.userSaleman == ''">
+        <div class="alert alert-warning mb-0" role="alert">
+            <strong>Atención</strong> Tu usuario no cuenta con id de vendedor, tus ventas NO generaran comisión. Por favor contacta con tu gerente de zona.
+        </div>
+    </div>-->
+
+    <div class=" row">
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class=" card">
+                <div class=" card-header bg-transparent">
+                    <h5 class=" text-uppercase text-dark ls-1 mb-1">Ticket #{{ this.ticketId }}</h5>
+                    <div class="form-group mb-0">
+                        <input #inputcodebar class="form-control" type="text" maxlength="25" placeholder="IMEI / Código de barras" (keyup.enter)="findByBarCodeOrImei($event.target.value)" [disabled]="this.configComponentPos().input">
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class=" table-responsive size-table-restriction">
+                        <table id="table-cart-sale" class=" table align-items-center table-flush table-header-smaller">
+                            <thead class=" thead-light">
+                                <tr>
+                                    <th scope="col">Producto</th>
+                                    <th scope="col">PZA</th>
+                                    <th scope="col">Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-dark" *ngFor="let item of groupItemsCart()">
+                                    <td>
+                                        {{ item.nombre }}
+                                        <span class="text-imei-cart" *ngIf="item.hasOwnProperty('imei')"><strong class="text-dark">IMEI: </strong>{{ item.imei }}</span>
+                                    </td>
+                                    <td scope="col">{{ item.quantity }}</td>
+                                    <td>{{ this.currencyFormatter(item.price) }}</td>
+                                </tr>
+
+                                <tr *ngFor="let item of groupItemsCartByPromo()">
+                                    <td>
+                                        <div class="checklist-entry flex-column align-items-start">
+                                            <div class="checklist-item checklist-item-warning">
+                                                <div class="checklist-info">
+                                                    <h5 class="checklist-title mb-0" style="font-size: 0.97em !important; color: black;"><i class="fas fa-tag mr-1"></i> {{ item.promoName }}</h5>
+                                                    <span class="material-in-promo" *ngFor="let m of item.group">{{ m.nombre }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-dark" scope="col">1</td>
+                                    <td class="text-dark">{{ this.currencyFormatter(item.price) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="btn-container-payments" class="" style="margin: 5px 10px;" *ngIf="this.cartItemList.length > 0"> 
+                        <button *ngIf="(this.calculatePayToTotal() > 0) && recharge_step == 1 && service_selected == null" type="button" class="btn btn-success d-block" (click)="modalPaymentSell(paymentSell)" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Pagar</button>
+                        <button *ngIf="(this.calculatePayToTotal() == 0) && recharge_step == 1 && service_selected == null" type="button" class="btn btn-success d-block" (click)="createNewSale()" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Terminar</button>
+
+                        <button *ngIf="(this.calculatePayToTotal() > 0) && service_selected != null" type="button" class="btn btn-success d-block" (click)="modalPaymentSell(paymentSell)" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Pagar</button>
+                        <button *ngIf="(this.calculatePayToTotal() == 0) && service_selected != null" type="button" class="btn btn-success d-block" (click)="createNewService()" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Terminar</button>
+
+                        <button *ngIf="(this.calculatePayToTotal() > 0)  && recharge_step == 2 && phoneB == '' " type="button" class="btn btn-success d-block" (click)="modalAskPhone(askPhone)" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Ingresar Numero Celular</button>
+                        <button *ngIf="(this.calculatePayToTotal() > 0)  && recharge_step == 2 && phoneB != '' " type="button" class="btn btn-success d-block" (click)="modalPaymentSell(paymentSell)" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Pagar</button>
+                        <button *ngIf="(this.calculatePayToTotal() == 0) && recharge_step == 2 && phoneB != '' " type="button" class="btn btn-success d-block" (click)="createNewSale()" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Terminar</button>
+
+                        <button type="button" class="btn btn-danger d-block" (click)="cleanSale()" [disabled]="this.blockAfterSale"><i class="fas fa-trash"></i> Cancelar</button>
+                    </div>
+
+                    <table class="table-detail-total mt-2 mb-2">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <!--<tr>
+                            <td class="font-weight-bold">Subtotal:</td>
+                            <td>{{ this.calculateTotal() | currency }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Impuestos:</td>
+                            <td>{{ 0 | currency }}</td>
+                        </tr>-->
+
+                        <tr>
+                            <td class="font-weight-bold">Total:</td>
+                            <td>{{ this.calculatePayToTotal() | currency }}</td>
+                        </tr>
+                        <ng-template *ngIf="false">
+                            <tr>
+                                <td class="font-weight-bold">Ahorro:</td>
+                                <td>{{ this.calculateDiscount() | currency }}</td>
+                            </tr>
+                        </ng-template>
+                        
+                        <!--<tr>
+                            <td class="font-weight-bold">Abonado:</td>
+                            <td>{{ this.calculatePaymentTicket() | currency }}</td>
+                        </tr>-->
+                        <tr>
+                            <td class="font-weight-bold">Cambio:</td>
+                            <td>{{ this.calculateCashChange() | currency }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class=" card">
+                <div class=" card-header bg-transparent" style="padding: 0.5rem 1.5rem; border-color: rgb(37 35 35 / 29%) !important;">
+                    <div class=" row align-items-center">
+                        <div class=" col">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <button id="btn-find-client" class="" (click)="this.modalClients(dinamicModal)" [disabled]="this.configComponentPos().find">
+                                        <i class="fas fa-search" style="font-size: 2.5em; color: #7ebeff !important;"></i>
+                                    </button>
+                                </div>
+                                <div class="col ml--2">
+                                    <p class="mb-0" style="float: right;font-size: 0.9rem;line-height: 1.85;">Caja: {{ this.cajaId }}</p>
+                                    <p class="mb-0" style="font-size: 0.9rem; line-height: 1.8;">Tienda: {{ this.storeName }}</p>
+                                    <h4 class="mb-0 text-brand-primary">{{ activeClient.clientName }}</h4>
+                                    <small class="text-brand-primary">RFC: {{ activeClient.clientRfc }}</small>
+                                    <small class="ml-2 text-brand-primary" style="display: none;">Email:  {{ activeClient.clientEmail }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body btns-card-height">
+                    <div class="row">
+                       
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" (click)="this.modalNewClient(createClient)" class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" [disabled]="this.configComponentPos().client">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-user-plus text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Crear Cliente</p>
+                            </button>
+                        </div>
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" (click)="changeSalesman()" placement="top-center" triggers="hover focus click" class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-id-card-alt text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Vendedor</p>
+                            </button>
+                        </div>
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" 
+                                class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center" ng-reflect-triggers="hover focus click" 
+                                ng-reflect-target-elm="" ng-reflect-cb-content="air-baloon" (click)="this.modalMaterials(dinamicModal)" [disabled]="configComponentPos().material">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-cart-plus text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Articulos</p>
+                            </button>
+                        </div>
+
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" (click)="modalReturnTicket(returnTicket)" [disabled]="configComponentPos().ticket">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-ticket-alt text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Ticket MP</p>
+                            </button>
+                        </div>
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click"  
+                                class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-cb-content="album-2" (click)="this.sweetAlertPaymentBill()" [disabled]="configComponentPos().abono">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-hand-holding-usd text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Abono MP</p>
+                            </button>
+                        </div>
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click"  
+                                class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" [disabled]="configComponentPos().terceros">
+                                <p class="text-center mb-1"><i class="icon-medium-size ni ni-world-2 text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Servicios T</p>
+                            </button>
+                        </div>
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" (click)="this.modalNewRecharge(createRecharge)"
+                                class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" [disabled]="configComponentPos().tae">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-comments-dollar text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Recarga TAE</p>
+                            </button>
+                        </div>
+                        <div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" 
+                                class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" [disabled]="configComponentPos().apartado">
+                                <p class="text-center mb-1"><i class="icon-medium-size ni ni-money-coins text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Monedero</p>
+                            </button>
+                        </div>
+                        <!--<div class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" 
+                                class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" [disabled]="configComponentPos().devolucion">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-undo-alt text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Devoluciones</p>
+                            </button>
+                        </div>-->
+                        <div *ngIf="existsLastTicket()" class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" (click)="printLastTicket()" [disabled]="configComponentPos().lastPrint">
+                                <p class="text-center mb-1"><i class="icon-medium-size fa fa-print text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Último Ticket</p>
+                            </button>
+                        </div>
+                        <!--<div *ngIf="this.promotionList.length > 0" class="col-lx-3 col-lg-4 col-md-4 col-sm-6">
+                            <button type="button" placement="top-center" triggers="hover focus click" class="btn-icon-clipboard pd-special-operations" ng-reflect-placement="top-center"
+                                ng-reflect-triggers="hover focus click" ng-reflect-target-elm="" ng-reflect-cb-content="album-2" (click)="modalPromotionActive()">
+                                <p class="text-center mb-1"><i class="icon-medium-size fas fa-tags text-brand-primary"></i></p>
+                                <p class="text-center mb-0 text-xs font-weight-bold">Promociones</p>
+                            </button>
+                        </div>-->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #dinamicModal="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog {{ this.modalSize }}">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ this.modalTitle }}</h4>
+                        <div class="search-header-modal">
+                            <label style="width: 350px;">
+                                <input id="search-modal-input" type="search" class="form-control form-control-sm" placeholder="{{this.modalSearchPlaceHolder}}" aria-controls="datatable" oninput="this.value = this.value.toUpperCase()" (keyup)="filterTable($event)" />
+                            </label>
+                        </div>
+                        <button type="button" class="close pull-right" (click)="dinamicModal.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0" #tableWrapper>
+                        <ngx-datatable #table class="bootstrap selection-cell" [columnMode]="'force'" [headerHeight]="50"  [footerHeight]="50" [rowHeight]="'auto'" (activate)="onActivate($event)" 
+                        [limit]="entries != -1 ? entries : undefined" [rows]="this.resourceDataTable" [selected]="selected" [selectionType]="SelectionType.single" (select)="onSelect($event)" [sorts]="[{prop: 'stock', dir: 'desc'}]">
+                            <ngx-datatable-column *ngFor="let cName of this.columnDataTable" name="{{ cName }}" class="text-sm" [headerClass]="getIsShowColName"  [cellClass]="getIsShowColName">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span *ngIf="(cName != 'stock' && cName != 'price')">{{ convertNotNaNColumn(value) }}</span>
+                                    <span *ngIf="(cName == 'price')">{{ value | currency }}</span>
+                                    <span *ngIf="(cName == 'stock')" class="badge badge-lg badge-{{ (value.includes('Disponible') ? 'success':'danger') }}">{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-methods-pay" bsModal #paymentSell="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Metodos de Pago' }}</h4>
+                        <button type="button" class="close pull-right" (click)="paymentSell.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <div class="tab">
+                            <div id="tab-buttons-method" class="list-group">
+                                <div *ngFor="let e of this.paymentList; let i = index">
+                                    <button type="button" class="list-group-item list-group-item-action {{ (i === 0 ? 'active':'') }}" (click)="openPaymentOption($event, e.nombre,e.sapId)" 
+                                    [style.background-color]="paymentIdModal == e.sapId ? 'gray' : paymentListContains(e.sapId) ? 'green' : 'white'"
+                                    style="border-radius: 10px;">
+                                        {{ e.nombre.slice(3) }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px; margin-right: 10px; margin-bottom: 1px; margin-left: 10px;">
+                                <p class="mb-0"><span style="font-weight: 600;">Total:</span> <span class="float-right">{{ this.calculateTotal() | currency }}</span></p>
+                                <p class="mb-0"><span style="font-weight: 600;">Pagado:</span> <span class="float-right">{{ this.calculatePaymentTicket() | currency }}</span></p>
+                                <p class="mb-0"><span style="font-weight: 600;">Saldo:</span> <span class="float-right">{{ this.calculatePayToTotal() | currency }}</span></p>
+                                <p class=""><span style="font-weight: 600;">Cambio:</span> <span class="float-right">{{ this.calculateCashChange() | currency }}</span></p>
+                            </div>
+                            <div *ngIf="!validateClientNumber()">
+                                <p class="mb-1">Tipo de facturación:</p>
+                                <div class="">
+                                    <input class="mr-2" type="radio" id="pordefinir" name="typeUsoCdfi" value="P01" (change)="onRadioCfdi($event.target.value)" [(ngModel)]="typeUsoCdfi" checked>
+                                    <label for="pordefinir">Por Definir</label>
+                                </div>
+                                
+                                <div class="">
+                                    <input class="mr-2" type="radio" id="gastosgeneral" name="typeUsoCdfi" value="G03" (change)="onRadioCfdi($event.target.value)" [(ngModel)]="typeUsoCdfi">
+                                    <label for="gastosgeneral">Gastos en General</label>
+                                </div>
+                                
+                                <div class="">
+                                    <input class="mr-2" type="radio" id="aquisicionmercancia" name="typeUsoCdfi" value="G01" (change)="onRadioCfdi($event.target.value)" [(ngModel)]="typeUsoCdfi">
+                                    <label for="aquisicionmercancia">Adquisición de Mercancia</label>
+                                </div>
+                            </div>
+                        </div>
+                          
+                        <div *ngFor="let e of this.paymentList; let i = index" id="{{e.nombre}}" class="tabcontent" style="padding-left: 2em;" [style.display]="i === 0 ? 'block':'none'">
+                        
+                            <div class="form-group mb-2">
+                                <input class="form-control digit-calculator" name="amountpayment-{{e.sapId}}" id="amountpayment-{{e.sapId}}" placeholder="0.00" required type="text" [(ngModel)]="amoutPayArr['P' + e.sapId]" prefix="$" mask="separator.2" thousandSeparator=","/>
+                                <div class="invalid-feedback d-block" *ngIf="validateAmountPaymentV2('P' + e.sapId)">Solo puede ingresar cantidades mayores en efectivo</div>
+                            </div>
+
+                            <!--<div class="form-group mb-2" *ngIf="validateTypePayment()">-->
+                            <div class="form-group mb-2" *ngIf="canShowTerminalList(e.sapId)">
+                                <select class="form-control" data-toggle="select" id="select-methods-card-{{e.sapId}}" (change)="selectPaymentCardTyped($event.target.value)" [(ngModel)]="paymentCardIdModalArr['P' + e.sapId]">
+                                    <option *ngFor="let e of this.typeCardMethods" [value]="e.id">{{ e.nombre }}</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-2 ml-3">
+                                <div id="calculator-content" class="calculator">
+                                    <div class="buttons">
+                                        <div class="leftPanel">
+                                            <div class="numbers">
+                                                <div (click)="addChar('P'+e.sapId, '7')">7</div>
+                                                <div (click)="addChar('P'+e.sapId, '8')">8</div>
+                                                <div (click)="addChar('P'+e.sapId, '9')">9</div>
+                                                <div (click)="addChar('P'+e.sapId, 'D')"><i class="fas fa-backspace"></i></div>
+                                            </div>
+                                            <div class="numbers">
+                                                <div (click)="addChar('P'+e.sapId, '4')">4</div>
+                                                <div (click)="addChar('P'+e.sapId, '5')">5</div>
+                                                <div (click)="addChar('P'+e.sapId, '6')">6</div>
+                                                <div (click)="addPaymentMethodV2('P'+e.sapId)" [disabled]="!validPaymentEnabledButtonV2('P' + e.sapId)"><i class="fas fa-plus"></i></div>
+                                            </div>
+                                            <div class="numbers">
+                                                <div (click)="addChar('P'+e.sapId, '1')">1</div>
+                                                <div (click)="addChar('P'+e.sapId, '2')">2</div>
+                                                <div (click)="addChar('P'+e.sapId, '3')">3</div>
+                                                <div (click)="removePaymentMethod('P'+e.sapId)"><i class="fas fa-trash"></i></div>
+                                            </div>
+                                            <div class="numbers">
+                                                <div (click)="addChar('P'+e.sapId, '0')">0</div>
+                                                <div (click)="addChar('P'+e.sapId, '.')">.</div>
+                                                <div id="clear" (click)="addChar('P'+e.sapId, 'C')">C</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group mb-0 pt-1" style="text-align: end;">
+                            <button *ngIf="(this.calculatePayToTotal() == 0) && recharge_step == 1 && service_selected == null" type="button" class="btn btn-success d-block btn-block" (click)="createNewSale(paymentSell)" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Terminar</button>
+                            <button *ngIf="(this.calculatePayToTotal() == 0) && recharge_step == 2 && phoneB != '' " type="button" class="btn btn-success d-block btn-block" (click)="createNewSale(paymentSell)" [disabled]="this.blockAfterSale"><i class="fas fa-money-bill"></i> Terminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #paymentSell2="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Abono' }}</h4>
+                        <button type="button" class="close pull-right" (click)="paymentSell.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <div class="form-group">
+                            <label class="form-control-label" for="select-methods">Metodo de Pago</label>
+                            <select class="form-control" data-toggle="select" id="select-methods" (change)="selectPaymentTyped($event.target.value)" [(ngModel)]="paymentIdModal">
+                                <option *ngFor="let e of this.paymentList" [value]="e.sapId">{{ e.nombre }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" *ngIf="validateTypePayment()">
+                            <label class="form-control-label" for="select-methods">Terminal Bancaria</label>
+                            <select class="form-control" data-toggle="select" id="select-methods-card" (change)="selectPaymentCardTyped($event.target.value)" [(ngModel)]="paymentCardIdModal">
+                                <option *ngFor="let e of this.typeCardMethods" [value]="e.id">{{ e.nombre }}</option>
+                            </select>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label class="form-control-label" for="amountpayment">Monto</label>
+                            <input class="form-control" id="amountpayment" placeholder="0.00" required value="1.00" type="number" [(ngModel)]="amoutPay" />
+                            <div class="invalid-feedback d-block" *ngIf="validateAmountPayment()">Solo puede ingresar cantidades mayores en efectivo</div>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-primary" (click)="addPaymentMethod(paymentSell)" [disabled]="!validPaymentEnabledButton()">Añadir</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #createClient="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Nuevo cliente' }}</h4>
+                        <button type="button" class="close pull-right" (click)="createClient.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form [formGroup]="this.formClient">
+                            <p class="text-danger">*Campos obligatorios</p>
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="title">¿Es persona o empresa?*</label>
+                                        <select class="form-control" data-toggle="select" id="title" formControlName="title" (change)="onChangeTypeTitle($event.target.value)">
+                                            <option value="persona">Persona</option>
+                                            <option value="empresa">Empresa</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="(this.formClient.value.title === 'empresa'); else fisica">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="name">Razón Social*</label>
+                                            <input class="form-control" id="name" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="name" maxlength="30"/>
+                                        </div>
+                                    </div>
+                                    <ng-template #fisica>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="name">Nombres*</label>
+                                            <input class="form-control" id="name" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="name" maxlength="35"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="apellidopaterno">Apellido Paterno*</label>
+                                            <input class="form-control" id="apellidopaterno" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="apellidopaterno" maxlength="35" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="apellidomaterno">Apellido Materno*</label>
+                                            <input class="form-control" id="apellidomaterno" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="apellidomaterno" maxlength="35" />
+                                        </div>
+                                    </ng-template>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="rfc">RFC*</label>
+                                        <input class="form-control" id="rfc" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="rfc" maxlength="13"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email">Correo Electrónico*</label>
+                                        <input class="form-control" id="email" oninput="this.value = this.value.toUpperCase()" required type="email" formControlName="email" maxlength="241"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="telefono">Teléfono*</label>
+                                        <input class="form-control" id="telefono" required type="tel" (keypress)="onlyNumberKey($event)" formControlName="telefono" maxlength="15"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="street">Calle*</label>
+                                        <input class="form-control" id="street" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="street" maxlength="30"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="numcasa">N° de casa*</label>
+                                                <input class="form-control" id="numcasa" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="numcasa" maxlength="6"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="cp">CP*</label>
+                                                <input class="form-control" id="cp" required type="tel" (keypress)="onlyNumberKey($event)" formControlName="cp" maxlength="5"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="city">Municipio*</label>
+                                        <input class="form-control" id="city" oninput="this.value = this.value.toUpperCase()" required type="text" formControlName="city" maxlength="35"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="region">Estado*</label>
+                                        <select class="form-control" data-toggle="select" id="region" formControlName="region">
+                                            <option *ngFor="let c of countryList" [value]="c.iniciales">{{ c.nombre.toUpperCase() }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 text-right">
+                                    <button type="button" class="btn btn-primary" (click)="createNewClient(createClient)" [disabled]="!this.formClient.valid">Crear</button>
+                                    <button type="button" class="btn btn-secondary" (click)="createClient.hide()">Cancelar</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #createRecharge="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Recarga de tiempo aire' }}</h4>
+                        <button type="button" class="close pull-right" (click)="closeRecharge(createRecharge)" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngIf="recharge_step == 1">
+                            <div class="grid-4">
+                                <ng-container *ngFor="let company of companies;">
+                                    <div class="container-box-center" style="margin: 20px;" (click)="selectCompany(company)">
+                                        <img src="./assets/img/cel_companies/{{company.imagen}}" style="width: 80%;position: relative;"><br>
+                                        <div class="centered-text">
+                                            <label style="text-transform: capitalize !important; width: 80%; text-align: center;font-size: larger;">{{company.nombre}}</label>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div *ngIf="recharge_step == 2">
+                            <div class="grid">
+                                <ng-container *ngFor="let monto of company_selected.montos;">
+                                    <div class="container-box-center" style="margin: 20px;" (click)="selectMonto(createRecharge,askPhone,company_selected.nombre + ' ' + monto.valor, monto)">
+                                        <img src="./assets/img/cel_companies/{{company_selected.imagen}}" style="width: 80%;"><br>
+                                        <div class="centered-text">
+                                            <label style="text-transform: capitalize !important; width: 80%; text-align: center; text-align: center;font-size: larger;">{{company_selected.nombre}} {{monto.valor | currency}}</label>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button type="button" class="btn btn-secondary" *ngIf="recharge_step != 1" (click)="backOneStep()">Atrás</button>
+                            <button type="button" class="btn btn-secondary" (click)="closeRecharge(createRecharge)">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #askPhone="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Recarga de tiempo aire' }}</h4>
+                        <button type="button" class="close pull-right" (click)="closePhoneModal(askPhone)" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-control-label" for="phoneA">Ingresar Numero Celular</label>
+                            <input class="form-control" id="phoneA" required type="tel" pattern = "[0-9] {3} - [0-9] {2} - [0-9] {3}" [(ngModel)]="phoneA" [hiddenInput]="true" mask="XXX - XXX - 0000"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="phoneB">Confirmar Numero Celular</label>
+                            <input class="form-control" id="phoneB" required type="tel" pattern = "[0-9] {3} - [0-9] {2} - [0-9] {3}" [(ngModel)]="phoneB"mask="000 - 000 - 0000"/>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: red;" *ngIf="phoneA != phoneB" > Los numeros celulares no coinciden </label> <br>
+                            <label style="color: red;" *ngIf="phoneA.length < 10 || phoneB.length < 10"> No es un numero celular valido </label>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button type="button" class="btn btn-secondary" [disabled]="phoneA.length < 10 || phoneB.length < 10 || phoneA != phoneB" (click)="confirmPhone(askPhone)">Confirmar</button>
+                            <button type="button" class="btn btn-secondary" (click)="closePhoneModal(askPhone)">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #createServiceThird="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Pago de Servicios' }}</h4>
+                        <button type="button" class="close pull-right" (click)="createRecharge.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngIf="service_step == 1">
+                            <div class="grid">
+                                <ng-container *ngFor="let service of services;">
+                                    <div style="margin: 20px;">
+                                        <img src="./assets/img/services/{{service.imagen}}" style="width: 80%;" (click)="selectService(service,createServiceThird)">
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div *ngIf="service_step == 2">
+                            <div class="form-group">
+                                <label class="form-control-label" for="serviceA">Ingresar el Numero de Folio del recibo</label>
+                                <input class="form-control" id="serviceA" required type="text"/>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button type="button" class="btn btn-secondary" *ngIf="service_step != 1" (click)="backOneStepService()">Atrás</button>
+                            <button type="button" class="btn btn-secondary" *ngIf="service_step == 2" (click)="finishService(service,createServiceThird)">Finalizar</button>
+                            <button type="button" class="btn btn-secondary" (click)="createServiceThird.hide()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #returnTicket="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">{{ 'Reanudar Ticket MP' }}</h4>
+                        <button type="button" class="close pull-right" (click)="returnTicket.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0 m-0">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-flush">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="sort">TICKET SL</th>
+                                        <th scope="col" class="sort">CLIENTE</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col" class="sort">Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    
+                                    <tr *ngFor="let sl of ticketFinList" (dblclick)="startFinancingSale(sl)">
+                                        <th>
+                                            <span class="name mb-0 text-sm">{{ sl.header.TICKET }}</span>
+                                        </th>
+                                        <td>{{ sl.extra.name }}</td>
+                                        <td>{{ sl.extra.total | currency }} {{ sl.header.CURRENCY }}</td>
+                                        <td>{{ sl.header.BUDAT }}</td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div bsModal #promotionModal="bs-modal" class="modal fade" role="dialog" [config]="{ backdrop: 'static' }">
+            <div class="modal-dialog {{ this.modalSize }}">
+                <div class="modal-content">
+                    <div class="modal-header bg-brand-primary">
+                        <h4 id="dialog-sizes-name1" class="modal-title pull-left text-white">Promociones del día</h4>
+                        <div class="search-header-modal">
+                            <label style="width: 350px;">
+                                <input id="search-promo-input" type="search" class="form-control form-control-sm" placeholder="{{this.modalSearchPlaceHolder}}" aria-controls="datatable" (keyup)="filterTable($event)" />
+                            </label>
+                        </div>
+                        <button type="button" class="close pull-right" (click)="promotionModal.hide()" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <ngx-datatable #tablePromo class="bootstrap" [columnMode]="'force'" [headerHeight]="50"  [footerHeight]="50" [rowHeight]="'auto'" [rows]="this.resourcePromotion" [sorts]="[{prop: 'nombre', dir: 'desc'}]">
+                            
+                            <ngx-datatable-column name="nombre" class="text-sm" [headerClass]="getIsShowColName"  [cellClass]="getIsShowColName">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span><i class="fas fa-tags mr-1"></i> {{ (value.trim().toUpperCase()) }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="requerido">
+                                <ng-template let-column="column" ngx-datatable-header-template>Materiales participantes para aplicar</ng-template>
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <strong>{{ value }}</strong>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="participan">
+                                <ng-template let-column="column" ngx-datatable-header-template>Materiales que aplican descuento</ng-template>
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <strong>{{ value }}</strong>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--<button class="btn btn-primary" (click)="this._autoSaveFile('ticketcomp', 208, 'SLCOPIA');">PrintAuto</button>
+    <button class="btn btn-primary" (click)="this._autoSaveFile2('ticketcomp', 308);">PrintAutoX</button>-->
+    <app-ticket [(ticketInfo)]="this.informationTicket"></app-ticket>
+
+    <ng-particles *ngIf="showConfetti" id="tsparticles" [options]="options"></ng-particles>
+
+</div>
+
+<div *ngIf="this.returnPromoActive().length > 0" class="flBtn flBtn-position-br flBtn-size-medium">
+	<input type="checkbox">
+	<a href="#" data-role="main">
+		<i class="fas fa-tags"></i>
+	</a>
+	<ul class="flBtn-first">
+		<li>
+            <a *ngFor="let i of this.returnPromoActive()" title="{{ i.name }}" (click)="applyPromotion(i)"><i class="fas fa-tag mr-1"></i> <span class="truncate-promo-text">{{ i.name.toUpperCase() }}</span></a>
+        </li>
+	</ul>
+</div>

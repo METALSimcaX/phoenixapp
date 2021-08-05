@@ -1,0 +1,119 @@
+<div class=" row">
+    <div class=" col-xl-12">
+        <div class=" card">
+            <div class=" card-header bg-transparent">
+                <div>
+                    <div style="float: left;">
+                        <h5 class=" h3 mb-0">Ventas</h5>
+                    </div>
+                    <div style="float: right;">
+                        <a class="btn btn-primary collapsed" (click)="showFilter = !showFilter"
+                                    href="javascript:void(0)">
+                                    <i class="fas fa-filter"></i>
+                        </a>
+                        <button class="btn btn-primary" (click)="applyFilters()" *ngIf="showFilter">
+                            Buscar
+                          </button>
+                    </div>
+                </div>
+            </div>
+            <div class=" card-header bg-transparent" *ngIf="showFilter">
+                <div class="flex-container">
+                    <div class="flex-child">
+                        <label>Ticket:</label><br>
+                        <input class="form-control" type="text" placeholder="Ticket" [(ngModel)]="ticketSearch">
+                    </div>
+                    <div class="flex-child">
+                        <label>Vendedor:</label><br>
+                        <input class="form-control" type="text" placeholder="Vendedor" [(ngModel)]="sellerSearch">
+                    </div>
+                    <div class="flex-child" style="margin-left: 20px;">
+                        <label>Fecha:</label><br>
+                        <input class="form-control" type="date" [(ngModel)]="dateSearch">
+                    </div>
+                </div>
+                  
+            </div>
+
+            <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table">
+                        <thead class=" thead-light" style="width: 100%">
+                            <tr>
+                              <th scope="row">Ticket</th>
+                    
+                              <th scope="row">Fecha</th>
+                    
+                              <th scope="row">Cantidad</th>
+    
+                              <th scope="row">Importe</th>
+
+                              <th scope="row">Vendedor</th>
+    
+                              <!--<th scope="row">Operaciones</th>-->
+                            </tr>
+                          </thead>
+    
+                          <tbody class="list" *ngFor="let sale of salesMap | keyvalue" style="width: 100%;">
+                            <tr class="collapsed" (click)="toogleTicket(sale.key)"
+                            [attr.aria-expanded]="isShowing(sale.key)" aria-controls="collapseEvent" href="javascript:void(0)">
+                                <th scope="row">
+                                    {{sale.key}}
+                                </th>
+                                <th scope="row">
+                                    {{sale.value[0].fecha}}
+                                </th>
+                                <th scope="row">
+                                    {{sumQuantity(sale.value)}}
+                                </th>
+                                <th scope="row">
+                                    {{sumAmount(sale.value) | currency}}
+                                </th>
+                                <th scope="row">
+                                    {{sale.value[0].vendedor}}
+                                </th>
+                                <!--<th>
+                                    <a class="collapsed" (click)="toogleTicket(sale.key)"
+                                        [attr.aria-expanded]="isShowing(sale.key)" aria-controls="collapseEvent" href="javascript:void(0)">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </th>-->
+                            </tr>
+                            <tr style="width: 100%;">
+                                <th colspan="12" style="width: 100%;">
+                                    <table class="table" [collapse]="!isShowing(sale.key)" [isAnimated]="true" style="display: table !important; width: 100%;">
+                                        <thead class=" thead-light">
+                                          <tr>
+                                            <th>Material</th>
+                                  
+                                            <th>Nombre</th>
+                  
+                                            <th>Cantidad</th>
+
+                                            <th>Importe</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody class="list">
+                                            <tr *ngFor="let saleDetail of sale.value" >
+                                                <th>{{saleDetail.material}}</th>
+
+                                                <th>{{saleDetail.nombre}}</th>
+                                      
+                                                <th>{{saleDetail.cantidad}}</th>
+                                      
+                                                <th>{{saleDetail.importe | currency}}</th>
+                                              </tr>
+                                        </tbody>
+                                    </table>
+                                </th>
+                            </tr>
+                            <!--div id="collapseEvent" [collapse]="isCollapsed" [isAnimated]="true">
+                                <div [attr.aria-expanded]="!isCollapsed" style="width: 100%;">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.</div>
+                            </div-->
+                          </tbody>
+                    </table>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>

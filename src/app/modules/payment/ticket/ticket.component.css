@@ -1,0 +1,71 @@
+* {
+    font-size: 9px;
+    color: black !important;
+    font-family: 'Times New Roman';
+    color: black !important;
+}
+
+#detail-ticket td,
+#detail-ticket th,
+#detail-ticket tr,
+table#detail-ticket {
+    /*width: 100%;*/
+    color: black !important;
+    border-top: 1px solid black;
+    border-collapse: collapse;
+    color: black !important;
+}
+
+p,h1,span,h2,h3,h4,h5,h6{
+    color: black !important;
+}
+
+p, span, h1, h2, h3, h4, h5
+{
+    color: black !important;
+}
+
+#detail-ticket
+{
+    width: 100%;
+}
+
+#detail-ticket td
+{
+    text-transform: lowercase !important;
+}
+
+td.producto,
+th.producto {
+    width: 75px;
+    max-width: 75px;
+}
+
+td.cantidad, th.cantidad
+{
+    width: 40px;
+    max-width: 40px;
+    word-break: break-all;
+}
+
+td.precio,
+th.precio {
+    width: 40px;
+    max-width: 40px;
+    word-break: break-all;
+}
+
+.centrado {
+    text-align: center;
+    align-content: center;
+}
+
+.ticket {
+    width: 165px;
+    max-width: 165px;
+}
+
+img {
+    max-width: inherit;
+    width: 70%;
+}

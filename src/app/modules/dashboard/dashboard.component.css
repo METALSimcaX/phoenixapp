@@ -1,0 +1,21 @@
+.main-content
+{
+    /*margin-left: 220px;*/
+    /*margin-left: 250px;*/
+}
+
+.salesman-box:hover
+{
+    border: 1px solid #1f68ad;
+    border-radius: 5px;
+    color: white !important;
+    background-color: #2778c4;
+}
+
+.salesman-box-active
+{
+    border: 1px solid #1f68ad !important;
+    border-radius: 5px !important;
+    color: white !important;
+    background-color: #2778c4 !important;
+}

@@ -1,0 +1,36 @@
+<div class="container mt-2 mb-3">
+    
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="card-header bg-transparent" *ngIf="this.centerList.length > 0">
+                    <!--<div class="form-group mb-0 col-3 pl-0 d-inline">
+                        <input #inputcodebar class="form-control" type="text" maxlength="25" placeholder="Buscar" (keyup.enter)="findBySale($event.target.value)" />
+                    </div>-->
+                    <div class="form-group col-3 mb-0 pl-0 d-inline-block">
+                        <select class="form-control" id="combocenter" (change)="onChangeCenter($event.target.value)" [(ngModel)]="selectedCenter">
+                            <option value="0" selected>Ver todos</option>
+                            <option *ngFor="let c of this.centerList" [value]="c">{{ c }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-body p-0" #tablependingWrapper>
+                    <ngx-datatable #tablepending class="bootstrap selection-cell" columnMode="force" [headerHeight]="50"  [footerHeight]="50" [rowHeight]="'auto'" rowHeight="auto" [limit]="35" (activate)="onActivate($event)" [rows]="this.dataSourceTable" [selected]="selected" [selectionType]="SelectionType.single" (select)="onSelect($event)">
+                        <ngx-datatable-column *ngFor="let cName of this.columnDataTable" name="{{ changeColumnName(cName) }}" class="text-center" [headerClass]="getIsShowColName"  [cellClass]="getIsShowColName">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span class="text-xs text-center" *ngIf="(cName == 'pagado'); else second">{{ value | currency }}</span>
+                                <ng-template #second>
+                                    <span class="text-center" *ngIf="(cName == 'processed'); else third" class="badge badge-lg badge-{{ (value ? 'success':'danger') }}">Sin procesar</span>
+                                </ng-template>
+                                <ng-template #third>
+                                    <span class="text-xs text-center">{{ ((value == null || value === '') ? '----------------':value ) }}</span>
+                                </ng-template>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

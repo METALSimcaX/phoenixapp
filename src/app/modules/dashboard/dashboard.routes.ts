@@ -1,0 +1,34 @@
+import { Routes } from "@angular/router";
+import { AuthComponent } from "../auth/auth.component";
+import { DepositComponent } from "../deposit/deposit.component";
+import { DrawerClosureComponent } from "../drawer-closure/drawer-closure.component";
+import { DrawerOpertureComponent } from "../drawer-operture/drawer-operture.component";
+import { DrawersComponent } from "../drawers/drawers.component";
+import { PaymentComponent } from "../payment/payment.component";
+import { PendingPaymentComponent } from "../pending-payment/pending-payment.component";
+import { SalesComponent } from "../sales/sales.component";
+import { SettingsComponent } from "../settings/settings.component";
+import { StatisticComponent } from "../statistic/statistic.component";
+import { ViaticoComponent } from "../viatico/viatico.component";
+
+export const DASHBOARD_ROUTES: Routes = [
+    { path: 'dashboard', component: StatisticComponent },
+    { path: 'viaticos', component: ViaticoComponent },
+    /*{ path: 'servicios', component: PaymentComponent },
+    { path: 'drawerOperture', component: DrawerOpertureComponent },
+    { path: 'drawerClosure', component: DrawerClosureComponent },
+    { path: 'deposit', component: DepositComponent },
+    { path: 'drawers', component: DrawersComponent },
+    { path: 'settings', component: SettingsComponent },
+    { path: 'login', component: AuthComponent },
+    { path: 'sales', component: SalesComponent },*/
+    { path: 'city/dashboard', component: StatisticComponent },
+    { path: 'city/servicios', component: PaymentComponent },
+    { path: 'city/drawerOperture', component: DrawerOpertureComponent },
+    { path: 'city/drawerClosure', component: DrawerClosureComponent },
+    { path: 'city/deposit', component: DepositComponent },
+    { path: 'city/drawers', component: DrawersComponent },
+    { path: 'city/settings', component: SettingsComponent },
+    { path: 'city/sales', component: SalesComponent },
+    { path: 'city/pendings', component: PendingPaymentComponent }
+];

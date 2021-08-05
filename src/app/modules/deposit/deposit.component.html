@@ -1,0 +1,134 @@
+<div class=" row">
+    <div class=" col-xl-12">
+        <div class=" card">
+            <!--div class="alert alert-warning" role="alert" *ngIf="invalid">
+                <strong>Atención, tienes cajas abiertas.</strong> Para poder continuar por favor cierra todas las cajas.
+            </div-->
+            <div class="alert alert-warning" role="alert" *ngIf="invalid">
+              <strong>Atención, tienes cajas abiertas.</strong> Solo se realizara el deposito de las cajas que se encuentren cerradas.
+            </div>
+            <div class=" card-header bg-transparent">
+                <div>
+                    <div style="float: left;">
+                        <h5 class=" h3 mb-0">Cierres de caja</h5>
+                    </div>
+                    <div style="float: right;">
+                        <button type="button" class="btn btn-default" (click)="askDeposit(classic1, 'modal_mini')" [disabled]="closuresToDeliver.length == 0">REGISTRAR DEPOSITO</button>
+                        <!--button type="button" class="btn btn-default" (click)="askDeposit(classic1, 'modal_mini')" [disabled]="noClosures">REGISTRAR DEPOSITO</button-->
+                        <!--button type="button" class="btn btn-default" (click)="askDeposit(classic1, 'modal_mini')" [disabled]="invalid || noClosures">REGISTRAR DEPOSITO</button-->
+                    </div>
+                </div>
+            </div>
+    
+            <div *ngFor="let day of closuresMap  | keyvalue: asIsOrder ">
+
+              <div class="card-header" style="background-color: #002E54;height: 60px; color: white;">
+                <div style="float: left;font-size: large;">
+                  {{day.key | date:'dd/MM/yyyy'}}
+                </div>
+                <div style="float: right;">
+                  <input style="width: 30px; height: 30px;" *ngIf="allClosed(day.value)"
+                  [checked]="closuresToDeliver.includes(day.value)"
+                  (change)="toogleDeliver(day.value)"
+                  type="checkbox"/>
+                </div>
+              </div>
+              <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table align-items-center table-flush">
+                      <thead class=" thead-light">
+                        <tr>
+                          <th class="sort" data-sort="name" scope="col">Caja</th>
+
+                          <th class="sort" data-sort="status" scope="col">Estatus de la caja</th>
+                
+                          <th class="sort" data-sort="budget" scope="col">Monto</th>
+                
+                          <th class="sort" data-sort="status" scope="col">Diferencia</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class=" list" *ngFor="let drawer of day.value">
+                        <tr>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    {{drawer.caja}}
+                                </div>
+                            </th>
+                            <th scope="row">
+                              <div class=" media align-items-center">
+                                <span class="badge badge-pill badge-success" *ngIf="drawer.estatus_drawer == 'C'">CERRADA</span>
+                                <span class="badge badge-pill badge-danger" *ngIf="drawer.estatus_drawer == 'A'">ABIERTA</span>
+                              </div>
+                            </th>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    {{drawer.monto | currency}}
+                                </div>
+                            </th>
+                            <th scope="row">
+                                <div class=" media align-items-center">
+                                    {{drawer.diferencia | currency}}
+                                </div>
+                            </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>  
+            </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>    
+
+<ng-template #classic1 let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card bg-secondary shadow border-0">
+          <div class="card-body px-lg-5 py-lg-5">
+            <div class="text-center text-muted mb-4">
+              <h5 class=" h3 mb-0">Ingresa los siguientes datos</h5>
+            </div>
+            <div>
+              <div class="form-group">
+                <label for="fecha" class="form-control-label">Fecha de entrega</label>
+                <input class="form-control" name="fecha" type="date" id="fecha" [(ngModel)]="fecha_deposito" required #fecha="ngModel">
+                <div *ngIf="fecha.invalid && (fecha.dirty || fecha.touched)" class="alert alert-danger">
+                    <div *ngIf="fecha.errors.required">
+                        Campo requerido.
+                      </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="banco" class="form-control-label">Banco donde se realizo la entrega de {{ monto_total | currency}}</label>
+                <select name="banco" class="form-control" id="banco" [(ngModel)]="bank_selected" required #banco="ngModel">
+                  <option *ngFor="let bank of banks" value="{{bank.id}}">{{bank.descripcion}} ({{bank.cuenta}})</option>
+                </select>
+                <div *ngIf="banco.invalid && (banco.dirty || banco.touched)" class="alert alert-danger">
+                    <div *ngIf="banco.errors.required">
+                        Campo requerido.
+                      </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="_folio" class="form-control-label">Folio de la Operación</label> 
+                <input class="form-control" type="text" id="_folio" [(ngModel)]="folio" required #_folio="ngModel">
+                <div *ngIf="_folio.invalid && (_folio.dirty || _folio.touched)" class="alert alert-danger">
+                    <div *ngIf="_folio.errors.required">
+                        Campo requerido.
+                      </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary my-4" [disabled]="!folio || !bank_selected || !fecha_deposito" (click)="finishDeposit()">FINALIZAR</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
